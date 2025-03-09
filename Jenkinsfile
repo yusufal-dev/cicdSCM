@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools{
-        maven 'Maven3'
-    }
-
     stages {
         stage('Cleanup Workspace'){
             steps{
@@ -18,15 +14,37 @@ pipeline {
             }
         }
 
-        stage('Build Application'){
-            steps{
-                sh 'mvn clean package'
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
             }
         }
-
-        stage('Test Application'){
+        
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
             steps{
-                sh 'mvn test'
+                sh '''
+                    test -f build/index.html
+                    npm test
+                '''
             }
         }
 
