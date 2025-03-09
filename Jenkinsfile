@@ -2,17 +2,12 @@ pipeline {
     agent any
 
     stages {
-        stage('Cleanup Workspace'){
-            steps{
-                cleanWs()
-            }
-        }
 
-        stage('Checkout from SCM'){
-            steps{
-                git branch: 'main', credentialsId: 'github', url: 'https://github.com/yusufal-dev/cicdSCM.git'
-            }
-        }
+        // stage('Checkout from SCM'){
+        //     steps{
+        //         git branch: 'main', credentialsId: 'github', url: 'https://github.com/yusufal-dev/cicdSCM.git'
+        //     }
+        // }
 
         stage('Build') {
             agent {
